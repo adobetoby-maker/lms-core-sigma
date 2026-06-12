@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { LayoutDashboard, Settings, ShieldCheck, Users } from 'lucide-react'
 import SignOutButton from './SignOutButton'
+import MobileNav from './MobileNav'
 import brand from '@/lib/brand'
 
 export default async function Navbar() {
@@ -26,7 +27,7 @@ export default async function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-50 backdrop-blur-md"
+      className="sticky top-0 z-50 backdrop-blur-md relative"
       style={{ background: 'color-mix(in srgb, var(--bg) 85%, transparent)', borderBottom: '1px solid var(--border)' }}
     >
       <style>{`
@@ -109,6 +110,7 @@ export default async function Navbar() {
             </div>
             <div className="w-px h-6 hidden sm:block" style={{ background: 'var(--border)' }} />
             <SignOutButton />
+            <MobileNav isAdmin={!!profile?.is_admin} />
           </div>
         </div>
       </div>

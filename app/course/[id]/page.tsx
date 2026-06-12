@@ -79,6 +79,8 @@ export default async function CoursePage({ params }: PageProps) {
   const videoList = videos ?? []
   const questionList = questions ?? []
   const status = enrollment.status as 'invited' | 'in_progress' | 'passed' | 'failed'
+  // No videos → treat as watched so the quiz is immediately accessible
+  const effectiveVideoWatched = videoList.length === 0 ? true : enrollment.video_watched
 
   const firstVideo = videoList[0]
   const firstYtId = firstVideo ? extractYouTubeId(firstVideo.url) : null
@@ -112,7 +114,7 @@ export default async function CoursePage({ params }: PageProps) {
             <CourseClient
               courseId={courseId}
               enrollmentId={enrollment.id}
-              videoWatched={enrollment.video_watched}
+              videoWatched={effectiveVideoWatched}
               status={status}
               videos={videoList.map(v => ({
                 ...v,
@@ -183,7 +185,7 @@ export default async function CoursePage({ params }: PageProps) {
                 <p className="text-slate-400 text-sm">
                   {questionList.length} multiple-choice question{questionList.length !== 1 ? 's' : ''}
                 </p>
-                {!enrollment.video_watched && (
+                {!effectiveVideoWatched && videoList.length > 0 && (
                   <p className="text-xs text-amber-400 mt-2">
                     Watch the video first to unlock the quiz.
                   </p>
