@@ -5,7 +5,7 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = process.env.RESEND_FROM ?? 'LMS Platform <noreply@worker-bee.app>'
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://lms-v2-green.vercel.app'
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://lms-vericore.vercel.app'
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
