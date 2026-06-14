@@ -1,0 +1,951 @@
+{
+  "results": [
+    "TEST: unauthenticated / redirects to /login",
+    "PASS: unauthenticated / redirects to /login",
+    "TEST: theme swatches clickable",
+    "PASS: theme swatches clickable",
+    "TEST: language toggle EN/ES works and back",
+    "PASS: language toggle EN/ES works and back",
+    "TEST: password eye toggle",
+    "PASS: password eye toggle",
+    "TEST: invalid login shows friendly error",
+    "PASS: invalid login shows friendly error",
+    "TEST: admin login",
+    "PASS: admin login",
+    "TEST: admin nav /admin",
+    "PASS: admin nav /admin",
+    "TEST: admin nav /admin/courses",
+    "PASS: admin nav /admin/courses",
+    "TEST: admin nav /admin/completions",
+    "PASS: admin nav /admin/completions",
+    "TEST: admin nav /admin/learners",
+    "PASS: admin nav /admin/learners",
+    "TEST: admin nav /admin/compliance",
+    "PASS: admin nav /admin/compliance",
+    "TEST: courses create form opens/cancels and required field blocks submit",
+    "PASS: courses create form opens/cancels and required field blocks submit",
+    "TEST: courses select toolbar, publish modal, delete cancel",
+    "delete confirmation text: Delete 1 course?\n\nCybersecurity Awareness Training\n\nThis cannot be undone.",
+    "PASS: courses select toolbar, publish modal, delete cancel",
+    "TEST: course edit page renders sections and back link",
+    "TEST: course edit AI improve buttons respond",
+    "PASS: course edit AI improve buttons respond",
+    "TEST: compliance template expand/play/cancel",
+    "TEST: sign out returns to login",
+    "PASS: sign out returns to login",
+    "TEST: learner login and course page accessible",
+    "PASS: learner login and course page accessible",
+    "TEST: mobile login layout visible",
+    "PASS: mobile login layout visible"
+  ],
+  "issues": [
+    {
+      "sev": "High",
+      "title": "Failed: course edit page renders sections and back link",
+      "details": "Quiz missing"
+    },
+    {
+      "sev": "High",
+      "title": "Failed: compliance template expand/play/cancel",
+      "details": "compliance page text missing: Admin Courses Completions Learners Compliance Admin Demo Administrator Sign out Back to Admin Compliance Training Templates One-click course creation with pre-built questions, scenario slideshows, and curated sources. Each template is audit-ready out of the box. 5 Templates 50 Pre-built questions 25 Scenario slides 16 Free sources Reference only. Requirements vary by jurisdiction, company size, and operations. Always verify with qualified legal counsel. Course creation is instant — add your own "
+    }
+  ],
+  "events": [
+    {
+      "type": "http",
+      "status": 400,
+      "url": "https://jfrupkcperwnohxsshfv.supabase.co/auth/v1/token?grant_type=password"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "url": "http://localhost:3000/login"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/dashboard?_rsc=yJVSf2-mUsVl2a-v",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/dashboard?_rsc=baRm8Hg-bKr8antF",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=oLJ3GhguZ9Y853hq",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=xFVjKFL12UrVWmwy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/20?_rsc=xFVjKFL12UrVWmwy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=xFVjKFL12UrVWmwy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=xFVjKFL12UrVWmwy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=xFVjKFL12UrVWmwy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/13?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/14?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/15?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/16?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/17?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/18?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/19?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/20?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/21?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=xFVjKFL12UrVWmwy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/16?_rsc=xFVjKFL12UrVWmwy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=xFVjKFL12UrVWmwy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/13?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/15?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/14?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/17?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/16?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/19?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/20?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/18?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/21?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=we3ubxF55xroP6U0",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/10?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/14?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/17?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/21?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/8?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/9?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/11?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/12?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/10?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/14?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/13?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/16?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/15?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/17?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/20?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/19?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/18?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/21?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=d6BzNTNNF8TPdb8j",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=d6BzNTNNF8TPdb8j",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=d6BzNTNNF8TPdb8j",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=TyaqNbK-GLMkJvsy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=TyaqNbK-GLMkJvsy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=TyaqNbK-GLMkJvsy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=TyaqNbK-GLMkJvsy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=TyaqNbK-GLMkJvsy",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=Qw1Wu4hU9vKdJ-ge",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=Qw1Wu4hU9vKdJ-ge",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=5XPAuAjozgrH_Cjz",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=5XPAuAjozgrH_Cjz",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=5XPAuAjozgrH_Cjz",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=5XPAuAjozgrH_Cjz",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=5XPAuAjozgrH_Cjz",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/8?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/9?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/13?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/14?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/15?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/19?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/17?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/18?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/20?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/9?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/8?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/10?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/12?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/13?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/11?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/14?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/15?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/17?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/16?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/18?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/20?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/21?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/19?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/8?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/11?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/10?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/13?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/12?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/16?_rsc=FhJJIhnuNY4Yls1C",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/8?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/9?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/10?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/13?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/11?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/12?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/14?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/17?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/15?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/16?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/18?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/19?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/20?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses/21?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=w2Qk3TlOiz9t1aGA",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=6JbEgPBLPU-GXba5",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=6JbEgPBLPU-GXba5",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=6JbEgPBLPU-GXba5",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=6JbEgPBLPU-GXba5",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=6JbEgPBLPU-GXba5",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=Uc9zvlZyYikRhZ1p",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=hodkdA9NrIspoBxV",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/compliance?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/completions?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/learners?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin/courses?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/admin?_rsc=HCvdUh0_Nv3lvQMZ",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "https://jfrupkcperwnohxsshfv.supabase.co/auth/v1/logout?scope=global",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/login",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/login",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/login",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/login?_rsc=06zRUfsMSCGZeM4t",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/login",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/dashboard?_rsc=yJVSf2-mUsVl2a-v",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/dashboard?_rsc=baRm8Hg-bKr8antF",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/13?_rsc=j79Vj4yH5aoiafxS",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/14?_rsc=j79Vj4yH5aoiafxS",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/16?_rsc=j79Vj4yH5aoiafxS",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/17?_rsc=j79Vj4yH5aoiafxS",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/13?_rsc=IOe_mmh6jQxP6_Ru",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/18?_rsc=IOe_mmh6jQxP6_Ru",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/14?_rsc=IOe_mmh6jQxP6_Ru",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/15?_rsc=IOe_mmh6jQxP6_Ru",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/17?_rsc=IOe_mmh6jQxP6_Ru",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/16?_rsc=IOe_mmh6jQxP6_Ru",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:3000/course/18?_rsc=oLJ3GhguZ9Y853hq",
+      "failure": "net::ERR_ABORTED"
+    }
+  ]
+}

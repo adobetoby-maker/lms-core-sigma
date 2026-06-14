@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
-import { ArrowLeft, Users, Mail, CheckCircle2, Clock, XCircle, BookOpen } from 'lucide-react'
+import { ArrowLeft, Users, Mail, CheckCircle2, Clock } from 'lucide-react'
 import LearnersClient from './LearnersClient'
 
 export const metadata = { title: 'Learner Management — LMS Admin' }
@@ -25,14 +26,34 @@ export default async function LearnersPage() {
   const courses = (coursesRaw ?? []) as { id: number; title: string }[]
 
   // All enrollments with profile + course info
-  const { data: enrollments } = await supabase
+  const { data: enrollmentsRaw } = await supabase
     .from('enrollments')
     .select(`
-      id, status, score, completed_at, created_at,
-      profiles:user_id(id, first_name, last_name, email:id),
+      id, status, score, completed_at, created_at, user_id,
+      profiles:user_id(id, first_name, last_name),
       courses:course_id(id, title)
     `)
     .order('created_at', { ascending: false })
+
+  // Get emails from auth.users for enrolled users
+  const userIds = [...new Set((enrollmentsRaw ?? []).map(e => e.user_id as string).filter(Boolean))]
+  const emailMap: Record<string, string> = {}
+  if (userIds.length > 0) {
+    const { data: authUsers } = await supabaseAdmin.auth.admin.listUsers({ perPage: 1000 })
+    for (const u of authUsers?.users ?? []) {
+      if (u.email) emailMap[u.id] = u.email
+    }
+  }
+
+  // Attach email to each enrollment's profile
+  const enrollments = (enrollmentsRaw ?? []).map(e => ({
+    ...e,
+    profiles: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...((e.profiles as unknown as Record<string, unknown>) ?? {}),
+      email: emailMap[e.user_id as string] ?? '',
+    },
+  }))
 
   // All invites
   const { data: invites } = await supabase
@@ -44,15 +65,12 @@ export default async function LearnersPage() {
     .order('created_at', { ascending: false })
 
   // Stats
-  const totalLearners = new Set([
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...(enrollments ?? []).map(e => (e.profiles as any)?.id as string | undefined).filter(Boolean),
-    ...(invites ?? []).map(i => i.email).filter(Boolean),
-  ]).size
+  const uniqueUserIds = new Set(userIds)
+  const totalLearners = uniqueUserIds.size + (invites ?? []).filter(i => i.status === 'pending').length
 
-  const passed    = (enrollments ?? []).filter(e => e.status === 'passed').length
+  const passed    = enrollments.filter(e => e.status === 'passed').length
   const pending   = (invites ?? []).filter(i => i.status === 'pending').length
-  const inProgress = (enrollments ?? []).filter(e => e.status === 'in_progress').length
+  const inProgress = enrollments.filter(e => e.status === 'in_progress').length
 
   return (
     <div className="min-h-screen bg-[#0a0a18]">

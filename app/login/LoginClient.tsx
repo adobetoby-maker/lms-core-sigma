@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
+import { GraduationCap } from 'lucide-react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import { Loader2, Eye, EyeOff } from 'lucide-react'
@@ -39,17 +39,24 @@ export default function LoginClient({ messages, locale }: Props) {
   async function signIn(e?: React.FormEvent) {
     e?.preventDefault()
     setLoading(true); setError('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) { setError(t(messages, 'login.error_invalid')); setLoading(false); return }
+    const { error: signInError, data } = await supabase.auth.signInWithPassword({ email, password })
+    if (signInError) { setError(t(messages, 'login.error_invalid')); setLoading(false); return }
+
+    // Route admin to /admin, learners to /dashboard
+    const userId = data?.user?.id
+    if (userId) {
+      const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', userId).single()
+      if (profile?.is_admin) { router.push('/admin'); router.refresh(); return }
+    }
     router.push('/dashboard'); router.refresh()
   }
 
   async function fillDemo(type: 'learner' | 'admin') {
     const creds = type === 'admin' ? DEMO_ADMIN : DEMO_LEARNER
     setLoading(true); setError('')
-    const { error } = await supabase.auth.signInWithPassword(creds)
-    if (error) { setError(error.message); setLoading(false); return }
-    router.push('/dashboard'); router.refresh()
+    const { error: signInError } = await supabase.auth.signInWithPassword(creds)
+    if (signInError) { setError(signInError.message); setLoading(false); return }
+    router.push(type === 'admin' ? '/admin' : '/dashboard'); router.refresh()
   }
 
   function toggleLocale() {
@@ -59,38 +66,34 @@ export default function LoginClient({ messages, locale }: Props) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--bg)' }}>
-      <div className="w-full max-w-md">
+    /* Dark grid background — always dark regardless of theme, matching the entry aesthetic */
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style={{ background: '#0a0a18' }}>
+      {/* Indigo grid */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
+        backgroundImage: `linear-gradient(rgba(99,102,241,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.3) 1px, transparent 1px)`,
+        backgroundSize: '40px 40px',
+      }} />
+      {/* Radial glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.15) 0%, transparent 70%)',
+      }} />
 
-        {/* Brand logo */}
+      <div className="relative z-10 w-full max-w-md">
+
+        {/* Brand logo / name */}
         <div className="flex flex-col items-center mb-8">
-          {brand.logoPath.endsWith('.svg') || brand.logoPath.startsWith('http') ? (
-            <Image
-              src={brand.logoPath}
-              alt={brand.logoAlt}
-              width={180}
-              height={52}
-              className="mb-4"
-              style={{ filter: themeId === 'vericore' ? 'brightness(1)' : 'none' }}
-              priority
-            />
+          {brand.logoPath ? (
+            <img src={brand.logoPath} alt={brand.logoAlt} className="h-14 w-auto object-contain mb-4 max-w-[200px]" />
           ) : (
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-                 style={{ background: 'var(--accent)' }}>
-              <span className="text-xl font-bold" style={{ color: 'var(--accent-fg)' }}>
-                {brand.name[0]}
-              </span>
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'var(--accent)' }}>
+              <GraduationCap className="w-8 h-8" style={{ color: 'var(--accent-fg)' }} />
             </div>
           )}
-          <h1 className="text-xl font-bold tracking-tight text-center" style={{ color: 'var(--text)' }}>
-            {brand.name}
-          </h1>
-          <p className="text-xs mt-1 text-center max-w-xs leading-relaxed" style={{ color: 'var(--text2)' }}>
-            {brand.tagline}
-          </p>
+          <h1 className="text-xl font-bold tracking-tight text-center text-white">{brand.name}</h1>
+          <p className="text-xs mt-1 text-center max-w-xs leading-relaxed text-slate-400">{brand.tagline}</p>
         </div>
 
-        {/* Card */}
+        {/* Card — uses theme variables so theme swatches work */}
         <div className="rounded-2xl p-8 shadow-2xl card-theme">
 
           {/* Theme swatches + lang toggle */}
@@ -117,9 +120,10 @@ export default function LoginClient({ messages, locale }: Props) {
             </button>
           </div>
 
-          <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--text)' }}>
+          <h2 className="text-xl font-semibold mb-1" style={{ color: 'var(--text)' }}>
             {t(messages, 'login.welcome')}
           </h2>
+          <p className="text-sm mb-6" style={{ color: 'var(--text2)' }}>Sign in to your account to continue</p>
 
           <form onSubmit={signIn} className="space-y-4">
             <div>
@@ -176,13 +180,16 @@ export default function LoginClient({ messages, locale }: Props) {
                 {t(messages, 'login.demo_access')}
               </p>
               <div className="grid grid-cols-2 gap-2">
-                {(['learner', 'admin'] as const).map(type => (
-                  <button key={type} onClick={() => fillDemo(type)} disabled={loading}
-                    className="rounded-xl px-4 py-2.5 text-sm font-medium cursor-pointer transition-all disabled:opacity-60"
-                    style={{ background: 'var(--bg3)', color: 'var(--text2)', border: '1px solid var(--border)' }}>
-                    {t(messages, `login.${type}_demo`)}
-                  </button>
-                ))}
+                <button onClick={() => fillDemo('learner')} disabled={loading}
+                  className="flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium cursor-pointer transition-all disabled:opacity-60"
+                  style={{ background: 'var(--bg3)', color: 'var(--text2)', border: '1px solid var(--border)' }}>
+                  <span>🎓</span>{t(messages, 'login.learner_demo')}
+                </button>
+                <button onClick={() => fillDemo('admin')} disabled={loading}
+                  className="flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium cursor-pointer transition-all disabled:opacity-60"
+                  style={{ background: 'var(--bg3)', color: 'var(--text2)', border: '1px solid var(--border)' }}>
+                  <span>⚙️</span>{t(messages, 'login.admin_demo')}
+                </button>
               </div>
             </div>
           )}

@@ -76,8 +76,17 @@ export default async function CoursePage({ params }: PageProps) {
     .select('id, text, option_a, option_b, option_c, option_d')
     .eq('course_id', courseId)
 
+  // Fetch prior quiz attempts for history
+  const { data: attempts } = await supabase
+    .from('quiz_attempts')
+    .select('id, score, passed, correct_count, total_count, attempted_at')
+    .eq('course_id', courseId)
+    .eq('user_id', user.id)
+    .order('attempted_at', { ascending: false })
+
   const videoList = videos ?? []
   const questionList = questions ?? []
+  const attemptList = attempts ?? []
   const status = enrollment.status as 'invited' | 'in_progress' | 'passed' | 'failed'
   // No videos → treat as watched so the quiz is immediately accessible
   const effectiveVideoWatched = videoList.length === 0 ? true : enrollment.video_watched
@@ -122,6 +131,7 @@ export default async function CoursePage({ params }: PageProps) {
                 vimeoId: extractVimeoId(v.url),
               }))}
               questions={questionList}
+              priorAttempts={attemptList}
               requireFullVideoWatch={course.require_full_video_watch}
             />
           </div>

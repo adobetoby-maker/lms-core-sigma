@@ -17,16 +17,16 @@ export interface Brand {
 }
 
 const brand: Brand = {
-  name:         'Vericore LMS',
-  tagline:      'Blockchain Compliance Training — built for projects that can\'t afford to get it wrong.',
-  company:      'Vericore Compliance Group',
-  logoPath:     '/vericore-logo.svg',
-  logoAlt:      'Vericore Compliance Group',
-  defaultTheme: 'vericore',
-  accentColor:  '#00e5a0',
-  contactEmail: 'hello@vericorecg.com',
-  website:      'https://www.vericorecg.com',
-  industry:     'blockchain-crypto',
+  name:         'LMS Core',
+  tagline:      'Professional compliance training — built for teams that can\'t afford gaps.',
+  company:      'LMS Core',
+  logoPath:     '',
+  logoAlt:      'LMS Core',
+  defaultTheme: 'midnight',
+  accentColor:  '#4f46e5',
+  contactEmail: 'admin@lmscore.app',
+  website:      'https://lms-core.vercel.app',
+  industry:     'healthcare-compliance',
 }
 
 export default brand

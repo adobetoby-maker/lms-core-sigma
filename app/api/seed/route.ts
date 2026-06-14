@@ -59,6 +59,8 @@ export async function GET(request: Request) {
       learnerId = learnerData.user.id
       log.push('Created learner user.')
     }
+    await supabaseAdmin.from('profiles').upsert({ id: learnerId, first_name: 'Alex', last_name: 'Demo' })
+    log.push('Upserted learner profile name.')
 
     // Check existing courses
     const { data: existingCourses } = await supabaseAdmin.from('courses').select('id, title')

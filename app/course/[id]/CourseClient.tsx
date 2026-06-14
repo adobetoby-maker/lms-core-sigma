@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { CheckCircle, Loader2, PlayCircle, AlertCircle, Trophy, ArrowLeft } from 'lucide-react'
+import { CheckCircle, Loader2, PlayCircle, AlertCircle, Trophy, ArrowLeft, Award } from 'lucide-react'
 
 type Video = {
   id: number
@@ -26,6 +26,15 @@ type Question = {
 
 type Status = 'invited' | 'in_progress' | 'passed' | 'failed'
 
+type Attempt = {
+  id: number
+  score: number
+  passed: boolean
+  correct_count: number
+  total_count: number
+  attempted_at: string
+}
+
 interface Props {
   courseId: number
   enrollmentId: number
@@ -33,6 +42,7 @@ interface Props {
   status: Status
   videos: Video[]
   questions: Question[]
+  priorAttempts: Attempt[]
   requireFullVideoWatch: boolean
 }
 
@@ -53,6 +63,7 @@ export default function CourseClient({
   status: initialStatus,
   videos,
   questions,
+  priorAttempts,
   requireFullVideoWatch,
 }: Props) {
   const [videoWatched, setVideoWatched] = useState(initialVideoWatched)
@@ -71,17 +82,22 @@ export default function CourseClient({
     setMarkingWatched(true)
     const supabase = createClient()
 
+    const isVideoOnly = questions.length === 0
+    const update = isVideoOnly
+      ? { video_watched: true, status: 'passed' as const, completed_at: new Date().toISOString() }
+      : { video_watched: true, status: 'in_progress' as const }
+
     const { error } = await supabase
       .from('enrollments')
-      .update({
-        video_watched: true,
-        status: 'in_progress',
-      })
+      .update(update)
       .eq('id', enrollmentId)
 
     if (!error) {
       setVideoWatched(true)
-      if (status === 'invited') setStatus('in_progress')
+      setStatus(isVideoOnly ? 'passed' : status === 'invited' ? 'in_progress' : status)
+      if (isVideoOnly) {
+        setResult({ score: 100, passed: true, correctCount: 0, totalCount: 0 })
+      }
     }
     setMarkingWatched(false)
   }
@@ -282,26 +298,39 @@ export default function CourseClient({
                 <h3 className={`text-2xl font-bold mb-1 ${result.passed ? 'text-emerald-400' : 'text-red-400'}`}>
                   {result.passed ? 'Congratulations!' : 'Not quite right'}
                 </h3>
-                <p className="text-white text-4xl font-black mb-3">{result.score}%</p>
-                <p className="text-slate-300 text-sm">
-                  {result.correctCount} of {result.totalCount} correct
-                </p>
+                {result.totalCount > 0 && (
+                  <>
+                    <p className="text-white text-4xl font-black mb-3">{result.score}%</p>
+                    <p className="text-slate-300 text-sm">
+                      {result.correctCount} of {result.totalCount} correct
+                    </p>
+                  </>
+                )}
                 <p className={`text-sm font-medium mt-2 ${result.passed ? 'text-emerald-400' : 'text-red-400'}`}>
                   {result.passed ? 'You passed this course!' : 'You need 70% or higher to pass.'}
                 </p>
               </div>
 
-              <div className="flex gap-3 mt-4">
+              <div className="flex flex-col gap-3 mt-4">
                 {result.passed ? (
-                  <Link
-                    href="/dashboard"
-                    className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-lg text-sm transition-colors"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back to Dashboard
-                  </Link>
-                ) : (
                   <>
+                    <Link
+                      href={`/certificate/${enrollmentId}`}
+                      className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg text-sm transition-colors"
+                    >
+                      <Award className="w-4 h-4" />
+                      View &amp; Download Certificate
+                    </Link>
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center justify-center gap-2 bg-[#0a0a18] hover:bg-[#252545] border border-[#2a2a4a] text-slate-300 font-medium py-3 rounded-lg text-sm transition-colors"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      Back to Dashboard
+                    </Link>
+                  </>
+                ) : (
+                  <div className="flex gap-3">
                     <button
                       onClick={handleRetry}
                       className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-lg text-sm transition-colors"
@@ -315,7 +344,7 @@ export default function CourseClient({
                       <ArrowLeft className="w-4 h-4" />
                       Dashboard
                     </Link>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
@@ -392,6 +421,32 @@ export default function CourseClient({
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Attempt history */}
+      {priorAttempts.length > 0 && (
+        <div className="bg-[#1a1a2e] border border-[#2a2a4a] rounded-xl p-5">
+          <h2 className="text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wide">
+            Attempt History
+          </h2>
+          <div className="space-y-2">
+            {priorAttempts.map((a, i) => (
+              <div key={a.id} className="flex items-center justify-between text-sm py-2 border-b border-[#2a2a4a] last:border-0">
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-500 text-xs w-5">{i + 1}</span>
+                  <span className={a.passed ? 'text-emerald-400 font-medium' : 'text-red-400 font-medium'}>
+                    {a.passed ? 'Passed' : 'Failed'}
+                  </span>
+                  <span className="text-white font-bold">{a.score}%</span>
+                  <span className="text-slate-500 text-xs">{a.correct_count}/{a.total_count} correct</span>
+                </div>
+                <span className="text-slate-500 text-xs">
+                  {new Date(a.attempted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

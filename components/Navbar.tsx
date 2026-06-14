@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { LayoutDashboard, Settings, ShieldCheck, Users } from 'lucide-react'
+import { LayoutDashboard, Settings, ShieldCheck, Users, FileText, ClipboardList } from 'lucide-react'
 import SignOutButton from './SignOutButton'
 import MobileNav from './MobileNav'
 import brand from '@/lib/brand'
@@ -80,11 +80,13 @@ export default async function Navbar() {
             {profile?.is_admin ? (
               <>
                 {[
-                  { href: '/admin',            label: 'Admin',       Icon: Settings },
-                  { href: '/admin/courses',     label: 'Courses',     Icon: null },
-                  { href: '/admin/completions', label: 'Completions', Icon: null },
-                  { href: '/admin/learners',    label: 'Learners',    Icon: Users },
-                  { href: '/admin/compliance',  label: 'Compliance',  Icon: ShieldCheck },
+                  { href: '/admin',              label: 'Admin',       Icon: Settings },
+                  { href: '/admin/courses',      label: 'Courses',     Icon: null },
+                  { href: '/admin/completions',  label: 'Completions', Icon: null },
+                  { href: '/admin/learners',     label: 'Learners',    Icon: Users },
+                  { href: '/admin/compliance',   label: 'Compliance',  Icon: ShieldCheck },
+                  { href: '/admin/documents',    label: 'Documents',   Icon: FileText },
+                  { href: '/admin/surveys',      label: 'Surveys',     Icon: ClipboardList },
                 ].map(({ href, label, Icon }) => (
                   <Link key={href} href={href}
                     className="nav-link flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-colors">
@@ -94,10 +96,19 @@ export default async function Navbar() {
                 ))}
               </>
             ) : (
-              <Link href="/dashboard" className="nav-link flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-colors">
-                <LayoutDashboard className="w-4 h-4" />
-                Dashboard
-              </Link>
+              <>
+                {[
+                  { href: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+                  { href: '/documents', label: 'Documents', Icon: FileText },
+                  { href: '/surveys',   label: 'Surveys',   Icon: ClipboardList },
+                ].map(({ href, label, Icon }) => (
+                  <Link key={href} href={href}
+                    className="nav-link flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-colors">
+                    <Icon className="w-4 h-4" />
+                    {label}
+                  </Link>
+                ))}
+              </>
             )}
           </nav>
 
