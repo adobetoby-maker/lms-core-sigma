@@ -1,3 +1,4 @@
+import { createHash } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
@@ -21,7 +22,7 @@ export async function GET() {
   // Get all docs
   const { data: docs } = await supabaseAdmin
     .from('documents')
-    .select('id, title, description, category, file_name, file_size, visibility, requires_ack, created_at')
+    .select('id, title, description, category, file_name, file_size, visibility, requires_ack, created_at, version')
     .order('category').order('title')
 
   // Get doc access rules for user's teams
@@ -86,6 +87,7 @@ export async function POST(req: NextRequest) {
 
   const filePath = `${user.id}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`
   const bytes = await file.arrayBuffer()
+  const contentHash = createHash('sha256').update(Buffer.from(bytes)).digest('hex')
 
   const { error: uploadError } = await supabaseAdmin.storage
     .from('documents')
@@ -95,10 +97,21 @@ export async function POST(req: NextRequest) {
 
   const { data: doc, error: dbError } = await supabaseAdmin
     .from('documents')
-    .insert({ title, description, category, file_path: filePath, file_name: file.name, file_size: file.size, requires_ack: requiresAck, uploaded_by: user.id })
+    .insert({ title, description, category, file_path: filePath, file_name: file.name, file_size: file.size, requires_ack: requiresAck, uploaded_by: user.id, version: 1, content_hash: contentHash })
     .select('id').single()
 
   if (dbError) return NextResponse.json({ error: dbError.message }, { status: 500 })
+
+  await supabaseAdmin.from('document_versions').insert({
+    document_id: doc.id,
+    version: 1,
+    file_path: filePath,
+    file_name: file.name,
+    file_size: file.size,
+    content_hash: contentHash,
+    uploaded_by: user.id,
+  })
+
   return NextResponse.json({ ok: true, id: doc.id })
 }
 

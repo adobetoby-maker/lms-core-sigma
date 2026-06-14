@@ -17,14 +17,35 @@ interface Doc {
   requires_ack: boolean
   visibility: 'all' | 'teams' | 'admin_only'
   created_at: string
+  version?: number
+}
+
+interface DocVersion {
+  id: string
+  version: number
+  file_name: string
+  file_size: number | null
+  content_hash: string | null
+  uploaded_at: string
+  notes: string | null
+  uploader: { first_name: string; last_name: string; email: string } | null
+  ack_count: number
+}
+
+interface ReportStaff {
+  name: string
+  acknowledged: boolean
+  acked_at: string | null
+  document_version: number | null
 }
 
 interface ReportDoc {
-  document: { id: string; title: string; category: string }
+  document: { id: string; title: string; category: string; version: number }
   total_staff: number
   acked: number
   pending: number
   completion_pct: number
+  staff: ReportStaff[]
 }
 
 interface Team { id: number; name: string }
@@ -68,6 +89,15 @@ export function AdminDocsClient() {
   const [newRequired, setNewRequired] = useState(false)
   // Vault state
   const [vaultLoading, setVaultLoading] = useState(false)
+  // Ack report expanded doc
+  const [expandedReportDoc, setExpandedReportDoc] = useState<string | null>(null)
+  // Version history slide-over
+  const [historyDoc, setHistoryDoc] = useState<Doc | null>(null)
+  const [versions, setVersions] = useState<DocVersion[]>([])
+  const [versionsLoading, setVersionsLoading] = useState(false)
+  const [versionFile, setVersionFile] = useState<File | null>(null)
+  const [versionNotes, setVersionNotes] = useState('')
+  const [versionUploading, setVersionUploading] = useState(false)
 
   const fetchDocs = useCallback(async () => {
     const res = await fetch('/api/documents')
@@ -185,6 +215,46 @@ export function AdminDocsClient() {
     setAccessRules(prev => prev.map(r => r.id === rule.id ? { ...r, is_required: updated } : r))
   }
 
+  const openHistory = async (doc: Doc) => {
+    setHistoryDoc(doc)
+    setVersions([])
+    setVersionFile(null)
+    setVersionNotes('')
+    setVersionsLoading(true)
+    const res = await fetch(`/api/documents/${doc.id}/versions`)
+    const data = await res.json() as { versions: DocVersion[] }
+    setVersions(data.versions ?? [])
+    setVersionsLoading(false)
+  }
+
+  const closeHistory = () => {
+    setHistoryDoc(null)
+    setVersions([])
+    setVersionFile(null)
+    setVersionNotes('')
+  }
+
+  const handleVersionUpload = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!historyDoc || !versionFile) return
+    setVersionUploading(true)
+    const fd = new FormData()
+    fd.append('file', versionFile)
+    if (versionNotes.trim()) fd.append('notes', versionNotes.trim())
+    const res = await fetch(`/api/documents/${historyDoc.id}/version`, { method: 'POST', body: fd })
+    if (res.ok) {
+      const data = await res.json() as { ok: boolean; version: number }
+      setVersionFile(null)
+      setVersionNotes('')
+      setDocs(prev => prev.map(d => d.id === historyDoc.id ? { ...d, version: data.version } : d))
+      setHistoryDoc(prev => prev ? { ...prev, version: data.version } : null)
+      const vRes = await fetch(`/api/documents/${historyDoc.id}/versions`)
+      const vData = await vRes.json() as { versions: DocVersion[] }
+      setVersions(vData.versions ?? [])
+    }
+    setVersionUploading(false)
+  }
+
   const handleVaultDownload = async () => {
     setVaultLoading(true)
     const res = await fetch('/api/documents/vault')
@@ -272,6 +342,18 @@ export function AdminDocsClient() {
                 {doc.description && <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text3)' }}>{doc.description}</p>}
               </div>
               <div className="flex items-center gap-2">
+                {(doc.version ?? 1) > 1 && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full font-mono" style={{ color: 'var(--accent)', background: 'color-mix(in srgb, var(--accent) 15%, transparent)' }}>
+                    v{doc.version}
+                  </span>
+                )}
+                <button onClick={() => openHistory(doc)}
+                  className="p-1.5 rounded-lg transition-colors cursor-pointer" title="Version history"
+                  style={{ color: 'var(--text3)' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </button>
                 <button onClick={() => { setSelectedDoc(doc); loadDocAccess(doc); setTab('access') }}
                   className="p-1.5 rounded-lg transition-colors cursor-pointer" title="Access rules"
                   style={{ color: 'var(--text3)' }}>
@@ -486,7 +568,14 @@ export function AdminDocsClient() {
             <div key={item.document.id} className="rounded-xl border p-5" style={{ background: 'var(--bg2)', borderColor: 'var(--border)' }}>
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="font-semibold" style={{ color: 'var(--text)' }}>{item.document.title}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold" style={{ color: 'var(--text)' }}>{item.document.title}</h3>
+                    {item.document.version > 1 && (
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ color: 'var(--accent)', background: 'color-mix(in srgb, var(--accent) 15%, transparent)' }}>
+                        v{item.document.version}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs" style={{ color: 'var(--text3)' }}>{item.document.category}</p>
                 </div>
                 <div className="text-right">
@@ -500,10 +589,58 @@ export function AdminDocsClient() {
                   background: item.completion_pct === 100 ? '#10b981' : item.completion_pct > 50 ? '#6366f1' : '#f59e0b',
                 }} />
               </div>
-              <div className="flex gap-4 text-xs">
+              <div className="flex items-center gap-4 text-xs">
                 <span className="text-emerald-400 flex items-center gap-1"><CheckCircle className="h-3 w-3" /> {item.acked} acknowledged</span>
                 <span className="text-amber-400 flex items-center gap-1"><Users className="h-3 w-3" /> {item.pending} pending</span>
+                <button
+                  onClick={() => setExpandedReportDoc(expandedReportDoc === item.document.id ? null : item.document.id)}
+                  className="ml-auto text-xs underline cursor-pointer"
+                  style={{ color: 'var(--accent)' }}>
+                  {expandedReportDoc === item.document.id ? 'Hide detail' : 'Show detail'}
+                </button>
               </div>
+              {expandedReportDoc === item.document.id && (
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                        <th className="text-left pb-2 pr-4 font-semibold" style={{ color: 'var(--text2)' }}>Staff</th>
+                        <th className="text-left pb-2 pr-4 font-semibold" style={{ color: 'var(--text2)' }}>Version</th>
+                        <th className="text-left pb-2 font-semibold" style={{ color: 'var(--text2)' }}>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {item.staff.map((s, i) => {
+                        const isOldVersion = s.acknowledged && s.document_version !== null && s.document_version < item.document.version
+                        return (
+                          <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+                            <td className="py-2 pr-4" style={{ color: 'var(--text)' }}>{s.name}</td>
+                            <td className="py-2 pr-4">
+                              {s.acknowledged ? (
+                                <span className="flex items-center gap-1">
+                                  <span className="font-mono" style={{ color: isOldVersion ? '#f59e0b' : 'var(--text)' }}>
+                                    {s.document_version !== null ? `v${s.document_version}` : '—'}
+                                  </span>
+                                  {isOldVersion && (
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                  )}
+                                </span>
+                              ) : (
+                                <span style={{ color: 'var(--text3)' }}>—</span>
+                              )}
+                            </td>
+                            <td className="py-2" style={{ color: s.acked_at ? 'var(--text2)' : 'var(--text3)' }}>
+                              {s.acked_at ? new Date(s.acked_at).toLocaleDateString() : 'Pending'}
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -547,6 +684,108 @@ export function AdminDocsClient() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ── VERSION HISTORY SLIDE-OVER ──────────── */}
+      {historyDoc && (
+        <>
+          <div className="fixed inset-0 z-40" style={{ background: 'rgba(0,0,0,0.4)' }} onClick={closeHistory} />
+          <div className="fixed right-0 top-0 h-full w-96 z-50 flex flex-col overflow-hidden"
+            style={{ background: 'var(--bg)', borderLeft: '1px solid var(--border)' }}>
+            {/* Header */}
+            <div className="flex items-start justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+              <div className="flex-1 min-w-0 pr-3">
+                <h2 className="text-sm font-bold truncate" style={{ color: 'var(--text)' }}>{historyDoc.title}</h2>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-xs" style={{ color: 'var(--text3)' }}>Current:</span>
+                  <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ color: 'var(--accent)', background: 'color-mix(in srgb, var(--accent) 15%, transparent)' }}>
+                    v{historyDoc.version ?? 1}
+                  </span>
+                </div>
+              </div>
+              <button onClick={closeHistory} className="p-1 rounded cursor-pointer flex-shrink-0" style={{ color: 'var(--text3)' }}>
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5 space-y-5">
+              {/* Upload new version */}
+              <form onSubmit={handleVersionUpload} className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text2)' }}>Upload New Version</p>
+                <div className="flex items-center gap-2 p-3 rounded-xl" style={{ background: 'var(--bg2)', border: '1px solid var(--border)' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--text3)' }}>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <label className="flex-1 cursor-pointer">
+                    <input type="file" accept=".pdf" className="hidden"
+                      onChange={e => setVersionFile(e.target.files?.[0] ?? null)} />
+                    <span className="text-xs" style={{ color: versionFile ? 'var(--text)' : 'var(--text3)' }}>
+                      {versionFile ? versionFile.name : 'Choose PDF…'}
+                    </span>
+                  </label>
+                  {versionFile && (
+                    <button type="button" onClick={() => setVersionFile(null)} style={{ color: 'var(--text3)' }}>
+                      <X className="h-3.5 w-3.5 cursor-pointer" />
+                    </button>
+                  )}
+                </div>
+                <textarea
+                  value={versionNotes}
+                  onChange={e => setVersionNotes(e.target.value)}
+                  placeholder="Change notes (optional)"
+                  rows={2}
+                  className="input-theme w-full px-3 py-2 rounded-xl text-xs resize-none"
+                />
+                <button type="submit" disabled={!versionFile || versionUploading}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer"
+                  style={{ background: 'var(--accent)', color: 'var(--accent-fg)' }}>
+                  <Upload className="h-3.5 w-3.5" />
+                  {versionUploading ? 'Uploading…' : 'Publish New Version'}
+                </button>
+              </form>
+
+              {/* Version history table */}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text2)' }}>Version History</p>
+                {versionsLoading ? (
+                  <p className="text-xs" style={{ color: 'var(--text3)' }}>Loading…</p>
+                ) : versions.length === 0 ? (
+                  <p className="text-xs" style={{ color: 'var(--text3)' }}>No version history yet.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {versions.map(v => (
+                      <div key={v.id} className="rounded-xl p-3 space-y-1.5" style={{ background: 'var(--bg2)', border: '1px solid var(--border)' }}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--accent)', background: 'color-mix(in srgb, var(--accent) 15%, transparent)' }}>
+                            v{v.version}
+                          </span>
+                          <span className="text-[10px]" style={{ color: 'var(--text3)' }}>
+                            {new Date(v.uploaded_at).toLocaleDateString()} {new Date(v.uploaded_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                        <p className="text-xs truncate" style={{ color: 'var(--text)' }}>{v.file_name}</p>
+                        {v.uploader && (
+                          <p className="text-[10px]" style={{ color: 'var(--text3)' }}>
+                            {v.uploader.first_name} {v.uploader.last_name} · {v.uploader.email}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-3 text-[10px]" style={{ color: 'var(--text3)' }}>
+                          {v.file_size !== null && <span>{fmtBytes(v.file_size)}</span>}
+                          {v.content_hash && <span className="font-mono">{v.content_hash.slice(0, 12)}</span>}
+                          <span className="flex items-center gap-0.5">
+                            <CheckCircle className="h-2.5 w-2.5" style={{ color: 'var(--accent)' }} />
+                            {v.ack_count} ack{v.ack_count !== 1 ? 's' : ''}
+                          </span>
+                        </div>
+                        {v.notes && <p className="text-[10px] italic" style={{ color: 'var(--text2)' }}>{v.notes}</p>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
       )}
 
       {/* ── COLD VAULT ──────────────────────────── */}
