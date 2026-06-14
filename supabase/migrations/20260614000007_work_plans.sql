@@ -46,6 +46,10 @@ alter table work_plan_blocks        enable row level security;
 alter table work_plan_block_courses enable row level security;
 alter table work_plan_assignments   enable row level security;
 
+drop policy if exists "admins_work_plans"              on work_plans;
+drop policy if exists "admins_work_plan_blocks"        on work_plan_blocks;
+drop policy if exists "admins_work_plan_block_courses" on work_plan_block_courses;
+drop policy if exists "admins_work_plan_assignments"   on work_plan_assignments;
 create policy "admins_work_plans"              on work_plans              for all using (exists (select 1 from profiles where id = auth.uid() and is_admin));
 create policy "admins_work_plan_blocks"        on work_plan_blocks        for all using (exists (select 1 from profiles where id = auth.uid() and is_admin));
 create policy "admins_work_plan_block_courses" on work_plan_block_courses for all using (exists (select 1 from profiles where id = auth.uid() and is_admin));

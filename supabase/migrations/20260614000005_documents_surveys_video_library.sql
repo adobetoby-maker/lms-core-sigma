@@ -67,6 +67,8 @@ create table if not exists public.video_library (
 
 -- RLS: documents — all authenticated users can read; only admins write
 alter table public.documents enable row level security;
+drop policy if exists "docs_read"  on public.documents;
+drop policy if exists "docs_admin" on public.documents;
 create policy "docs_read"   on public.documents for select using (auth.uid() is not null);
 create policy "docs_admin"  on public.documents for all using (
   exists (select 1 from public.profiles where id = auth.uid() and is_admin = true)
@@ -74,6 +76,8 @@ create policy "docs_admin"  on public.documents for all using (
 
 -- RLS: document_acks — users manage their own acks; admins read all
 alter table public.document_acks enable row level security;
+drop policy if exists "acks_own"   on public.document_acks;
+drop policy if exists "acks_admin" on public.document_acks;
 create policy "acks_own"    on public.document_acks for all using (user_id = auth.uid());
 create policy "acks_admin"  on public.document_acks for select using (
   exists (select 1 from public.profiles where id = auth.uid() and is_admin = true)
@@ -81,6 +85,8 @@ create policy "acks_admin"  on public.document_acks for select using (
 
 -- RLS: surveys — active surveys readable by all; all surveys by admins; responses own
 alter table public.surveys enable row level security;
+drop policy if exists "surveys_active" on public.surveys;
+drop policy if exists "surveys_admin"  on public.surveys;
 create policy "surveys_active" on public.surveys for select using (
   is_active = true or exists (select 1 from public.profiles where id = auth.uid() and is_admin = true)
 );
@@ -89,12 +95,16 @@ create policy "surveys_admin"  on public.surveys for all using (
 );
 
 alter table public.survey_questions enable row level security;
+drop policy if exists "sq_read"  on public.survey_questions;
+drop policy if exists "sq_admin" on public.survey_questions;
 create policy "sq_read"    on public.survey_questions for select using (auth.uid() is not null);
 create policy "sq_admin"   on public.survey_questions for all using (
   exists (select 1 from public.profiles where id = auth.uid() and is_admin = true)
 );
 
 alter table public.survey_responses enable row level security;
+drop policy if exists "sr_own"   on public.survey_responses;
+drop policy if exists "sr_admin" on public.survey_responses;
 create policy "sr_own"     on public.survey_responses for all using (user_id = auth.uid());
 create policy "sr_admin"   on public.survey_responses for select using (
   exists (select 1 from public.profiles where id = auth.uid() and is_admin = true)
@@ -102,6 +112,8 @@ create policy "sr_admin"   on public.survey_responses for select using (
 
 -- RLS: video_library — all authenticated users can read; only admins write
 alter table public.video_library enable row level security;
+drop policy if exists "vl_read"  on public.video_library;
+drop policy if exists "vl_admin" on public.video_library;
 create policy "vl_read"    on public.video_library for select using (auth.uid() is not null);
 create policy "vl_admin"   on public.video_library for all using (
   exists (select 1 from public.profiles where id = auth.uid() and is_admin = true)
