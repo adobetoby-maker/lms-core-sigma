@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { LayoutDashboard, Settings, ShieldCheck, Users, FileText, ClipboardList, Users2 } from 'lucide-react'
+import { LayoutDashboard, Settings, ShieldCheck, Users, FileText, ClipboardList, Users2, CalendarDays } from 'lucide-react'
 import SignOutButton from './SignOutButton'
 import TourReplayButton from './TourReplayButton'
 import MobileNav from './MobileNav'
@@ -86,6 +86,7 @@ export default async function Navbar() {
                   { href: '/admin/completions',  label: 'Completions', Icon: null },
                   { href: '/admin/learners',     label: 'Learners',    Icon: Users },
                   { href: '/admin/teams',        label: 'Teams',       Icon: Users2 },
+                  { href: '/admin/work-plans',   label: 'Work Plans',  Icon: CalendarDays },
                   { href: '/admin/compliance',   label: 'Compliance',  Icon: ShieldCheck },
                   { href: '/admin/documents',    label: 'Documents',   Icon: FileText },
                   { href: '/admin/surveys',      label: 'Surveys',     Icon: ClipboardList },

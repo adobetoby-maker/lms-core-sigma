@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/compliance-overdue",
       "schedule": "0 10 * * 1"
+    },
+    {
+      "path": "/api/cron/work-plan-enroll",
+      "schedule": "0 8 * * *"
     }
   ]
 }
